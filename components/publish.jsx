@@ -69,7 +69,7 @@ const Publish = () => {
         dispatch({
             type: "PUBLISH_LOADING"
         })
-        fetch('https://wootstrap-swq47x73ta-ue.a.run.app/publish', {
+        fetch('https://mui-magic-swq47x73ta-uc.a.run.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
