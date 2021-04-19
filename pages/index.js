@@ -1,47 +1,47 @@
-import Head from 'next/head'
 import Generator from '../components/generator.jsx';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { Typography } from '@material-ui/core';
 
 export default function Home({pageProps}) {
   return (
     <div>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:300,400,500,700&display=swap" />`,
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:300,400,500,700&display=swap" />`,
-      </Head>
-
-      <main>
-        <CssBaseline />
-        <h1>
-          <a href="https://nextjs.org">Mui Magic</a>
+      <header style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100vw',
+        height: '90vh'
+      }}>
+        <h1 style={{
+          fontFamily: '"Itim", cursive',
+          color: 'tomato',
+          fontWeight: 800,
+          fontSize: 94,
+          margin: '0 auto'
+        }}>
+          MUI Magic
         </h1>
-
-        <p>
-          Design your Material-UI theme here and <code>import Components from '@mui-magic/your-theme'</code> in your React app
-        </p>
-
+        <h2 style={{
+          fontWeight: 500,
+          textAlign: 'center',
+          padding: 20,
+          lineHeight: 3
+        }}>
+          Publish a custom Material-UI theme and <code style={{
+              backgroundColor: 'floralwhite',
+              color: 'darkslategrey',
+              padding: '8px',
+              borderRadius: '5px',
+              fontWeight: 900,
+              fontSize: 18
+          }}>import Components from '@mui-magic/your-theme'</code> in your React app
+        </h2>
+       
+<a className="github-button" href="https://github.com/mui-magic/mui-magic" data-size="large" data-show-count="true" aria-label="Star mui-magic/mui-magic on GitHub">Star</a>
+      </header>
+      <main>
         <Generator />
       </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' me'}
-        </a>
-      </footer>
-
   
     </div>
   )

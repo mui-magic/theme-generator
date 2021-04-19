@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Slider,
 Typography,
-Card,
-CardMedia} from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+Card} from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { getThemePreview } from './utils.js'
 import reactCSS from 'reactcss';
 
@@ -49,12 +47,7 @@ const Spacing = () => {
 
         },
     });
-    const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-        return createMuiTheme(themePreview);
-    }, [themePreview]);
-    return <ThemeProvider theme={theme}>
-        <div >
+    return <div >
             <Typography variant="h1" gutterBottom>Shape</Typography>
             <Card style={styles.root}>
                 <div style={styles.slider}>
@@ -90,7 +83,6 @@ const Spacing = () => {
                 </div>
             </Card>            
         </div>
-    </ThemeProvider>
 }
 
 export default Spacing;

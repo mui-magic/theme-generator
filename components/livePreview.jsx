@@ -1,9 +1,6 @@
 import React from 'react';
 import { Card,
     Button,
-    ThemeProvider,
-    Typography,
-    createMuiTheme,
     CardHeader,
     CardContent,
     CardActions,
@@ -14,20 +11,13 @@ import { Card,
     FormLabel,
     FormControlLabel,
     Radio,
-    RadioGroup } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux'
-import { getThemePreview } from './utils.js'
+    RadioGroup,
+    useTheme } from '@material-ui/core';
 const LivePreview = () => {
-    
-    const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-        return createMuiTheme(themePreview);
-    }, [themePreview]);
-
-    return <ThemeProvider theme={theme}>
-        <Card style={{padding: theme.spacing(3)}}>
+    const theme = useTheme();
+    return <Card style={{padding: theme.spacing(3)}}>
             <CardContent>
-                <CardHeader title="Tip the Cow" subheader="Magic ain't easy!"/>
+                <CardHeader title="Live Preview" />
                 <Divider style={{ marginBottom: theme.spacing(2)}}/>
                 
                 <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -58,7 +48,7 @@ const LivePreview = () => {
                         // value={inputColor}
                         // onChange={(e) => setInputColor(e.target.value)}
                         >
-                            <FormControlLabel value="paypal" control={<Checkbox />} label="Email me Moosletter™ updates" />
+                            <FormControlLabel control={<Checkbox defaultChecked/>} label="Email me Moosletter™ updates" />
                             
                         </RadioGroup>
                     </FormControl>
@@ -73,10 +63,9 @@ const LivePreview = () => {
             </CardContent>
             <Divider style={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }}/>
             <CardActions>
-                <Button fullWidth>Submit</Button>
+                <Button fullWidth>Tip the Cow</Button>
             </CardActions>
         </Card>
-    </ThemeProvider>
 }
 
 export default LivePreview;

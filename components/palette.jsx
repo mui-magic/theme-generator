@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import reactCSS from 'reactcss';
 import { useDispatch, useSelector } from 'react-redux'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { getThemePreview } from './utils.js'
 import { Typography,
     FormControl,
     FormLabel,
@@ -73,15 +71,8 @@ const Palette = () => {
             },
         }
     });
-    const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-        return createMuiTheme(themePreview);
-    }, [themePreview]);
-    useEffect(()=>{
-        document.body.style.backgroundColor = palette.type === "light" ? '#fafafa' : '#303030';
-    }, [palette.type])
     
-    return (<ThemeProvider theme={theme} >
+    return (
         <div >
             <Typography variant="h1" gutterBottom>Palette</Typography>
             <Card style={styles.root}>
@@ -198,7 +189,7 @@ const Palette = () => {
                 </CardMedia>
             </Card>
         </div>
-    </ThemeProvider>)
+)
 }
 
 export default Palette;

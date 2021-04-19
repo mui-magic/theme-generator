@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 
 
-const fontList = {
+export const fontList = {
     Roboto: {
         name: 'Roboto',
         fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',

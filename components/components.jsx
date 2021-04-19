@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Radio,
     RadioGroup,
@@ -81,11 +81,6 @@ const Components = () => {
         // size
 
     const dispatch = useDispatch();
-    const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-            return createMuiTheme(themePreview);
-    }, [themePreview]);
-
     const {
         buttonVariant,
         buttonColor,
@@ -170,8 +165,7 @@ const Components = () => {
 
         },
     });
-    return (<ThemeProvider theme={theme}>
-        <div >
+    return (<div >
             <Typography variant="h1" gutterBottom>Components</Typography>
             <Card style={styles.root}>
                 <div style={styles.controls}>
@@ -373,7 +367,6 @@ const Components = () => {
             </Card>
             
         </div>
-    </ThemeProvider>
     );
 }
 

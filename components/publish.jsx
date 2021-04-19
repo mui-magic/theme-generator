@@ -6,22 +6,34 @@ import {
     Divider,
     CardMedia,
     Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    LinearProgress
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { getThemePreview } from './utils.js'
+import { useTheme, useMediaQuery } from '@material-ui/core';
+import { getFontLinkList, getThemePreview } from './utils.js';
 import reactCSS from 'reactcss';
+import validateNPM from 'validate-npm-package-name';
 
 const Publish = () => {
 
     const dispatch = useDispatch();
     const palette = useSelector(s => s.palette);
+    const fontList = useSelector(getFontLinkList);
     const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-        return createMuiTheme(themePreview);
-    }, [themePreview]);
+    const theme = useTheme();
+    const [modalOpen, setModalOpen] = useState(false)
+    const [themeName, setThemeName] = useState('')
+    const [status, setStatus] = useState('');
+    const [isInvalid, setIsInvalid] = useState(false);
+    const [tag, setTag] = useState('');
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-
+    
     const styles = reactCSS({
         'default': {
             root: {
@@ -36,12 +48,6 @@ const Publish = () => {
                 flexDirection: 'column',
                 justifyContent: 'space-evenly'
             },
-            dropdowns: {
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                marginBottom: 0
-            },
             sliders: {
                 width: 400,
                 padding: 35,
@@ -49,27 +55,21 @@ const Publish = () => {
                 flexDirection: 'column',
                 justifyContent: 'space-between'
             },
-            sliderLabelCombo: {
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                marginBottom: 20
-            },
-            firstDropdown: {
-                marginRight: 10
-            }
-
         },
     });
 
-    const [themeName, setThemeName] = useState('')
-
-
     const publish = useCallback(() => {
-        dispatch({
-            type: "PUBLISH_LOADING"
-        })
-        fetch('https://mui-magic-swq47x73ta-uc.a.run.app', {
+        let { validForNewPackages, warnings, errors } = validateNPM(themeName);
+        if (!validForNewPackages || (['core','styles','system','types','utils'].indexOf(themeName) > -1)) {
+            // invalid name
+            console.log('INVALID')
+            setIsInvalid(true);
+            return;
+        }
+
+        setStatus('loading')
+        setModalOpen(true);
+        fetch('https://mui-magic-swq47x73ta-uc.a.run.app/publish', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,38 +84,127 @@ const Publish = () => {
             })
             .then(data => {
                 console.log('Success:', data);
-                dispatch({
-                    type: "PUBLISH_SUCCESS"
-                })
+                setTag(data.packageTag);
+                setStatus('success');
             })
             .catch((error) => {
                 console.error('Error:', error);
-                dispatch({
-                    type: "PUBLISH_ERROR"
-                })
+                setStatus('error')
             });
     }, [themePreview, themeName]);
-    return <ThemeProvider theme={theme}>
-        <div >
-            <Typography variant="h1" gutterBottom>Publish!</Typography>
+
+    return <div >
+            <Typography variant="h1" gutterBottom>Publish</Typography>
 
             <Card style={styles.root}>
                 <div style={styles.sliders}>
                     <Typography variant="h5" >Magicians never reveal their secrets!</Typography>
                     <Typography variant="subtitle1" gutterBottom component="span">But Moogicians do...</Typography>
                     <Divider style={{marginBottom: theme.spacing(1)}}/>
-                    <Typography variant="body1" component="div">Your personalized component library will be published to the NPM registry under the <pre style={{ display: 'inline-block' }}>@mui-magic</pre> scope. It's a clone of <pre style={{ display: 'inline-block' }}>@material-ui/core@4.11.3</pre>, so you get all the Material-UI bells and whistles without any of the styling headaches!</Typography>
+                <Typography variant="body1" component="div">Your personalized component library will be published to the NPM registry under the <code style={{
+                    backgroundColor: 'floralwhite',
+                    color: 'darkslategrey',
+                    padding: '4px',
+                    borderRadius: '5px',
+                    display: 'inline-block',
+                    lineHeight: 1
+                }}>@mui-magic</code> scope. It's a clone of <code style={{
+                    backgroundColor: 'floralwhite',
+                    color: 'darkslategrey',
+                    padding: '4px',
+                    borderRadius: '5px',
+                    display: 'inline-block',
+                    lineHeight: 1
+                }}>@material-ui/core@4.11.3</code>, so you get all the Material-UI bells and whistles without any of the styling headaches!</Typography>
                     
                 </div>
                 <CardMedia
                     style={styles.preview}
                 >
-                        <TextField value={themeName} onChange={(e)=>setThemeName(e.target.value)} fullWidth required id="theme-name" label="Theme Name" />
+                        <TextField error={isInvalid} helperText={isInvalid && 'Not a valid name'} value={themeName} onChange={(e)=>{setThemeName(e.target.value); if (isInvalid){setIsInvalid(false);}  }} fullWidth required id="theme-name" label="Theme Name" />
                         <Button onClick={() => publish()} fullWidth>Publish</Button>
                 </CardMedia>
             </Card>
+            <Dialog
+                fullScreen={fullScreen}
+                disableBackdropClick
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                aria-labelledby="responsive-dialog-title"
+            >
+            <DialogTitle id="responsive-dialog-title">{(status === 'loading') ? "Publishing..." : ( (status == 'error')? "Hmm...": "Published!")}</DialogTitle>
+            <DialogContent style={{ minWidth: '600px' }}>
+               
+                { (status === 'loading') && (<>
+                    <DialogContentText>
+                        Reticulating Splines
+                    </DialogContentText>
+                    <LinearProgress />
+                </>)
+                }
+                {(status === 'success') && (<>
+                    <DialogContentText>
+                        1) Install your theme
+                        <code style={{
+                            backgroundColor: 'floralwhite',
+                            color: 'darkslategrey',
+                            padding: '8px',
+                            borderRadius: '5px',
+                            display: 'block',
+                            lineHeight: 1.5,
+                            fontWeight: 800,
+                            fontSize: 16
+                        }}>$ npm install @mui-magic/{themeName}@{tag}</code>
+                    </DialogContentText>
+                    <DialogContentText>
+                        2) Add these fonts to your webpage
+                        <code style={{
+                            backgroundColor: 'floralwhite',
+                            color: 'darkslategrey',
+                            padding: '8px',
+                            borderRadius: '5px',
+                            display: 'block',
+                            lineHeight: 1.5,
+                            fontWeight: 800,
+                            fontSize: 16
+                        }}>{fontList.map(f => (
+                            <div key={f}>
+                                {f}
+                            </div>
+                        ))}</code>
+                    </DialogContentText>
+                    <DialogContentText>
+                        3) Use your published theme as if it were @material-ui/core
+                        <code style={{
+                            backgroundColor: 'floralwhite',
+                            color: 'darkslategrey',
+                            padding: '8px',
+                            borderRadius: '5px',
+                            display: 'block',
+                            lineHeight: 1.5,
+                            fontWeight: 800,
+                            fontSize: 16
+                        }}>{`import { Button } from '@mui-magic/${themeName}'`}</code>
+                    </DialogContentText>
+                </>)
+                }
+                {(status === 'error') && (<>
+                    <DialogContentText>
+                        Something went wrong
+                    </DialogContentText>
+                </>)
+                }
+                
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={() => setModalOpen(false)} variant="outlined" color="primary">
+                        close
+                    </Button>
+                    
+                </DialogActions>
+            </Dialog>
         </div>
-    </ThemeProvider>
+
 }
 
 export default Publish;

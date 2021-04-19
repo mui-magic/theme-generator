@@ -3,6 +3,111 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import {lighten, darken} from '@material-ui/core/styles'
 let store
+const buildProps = ({
+    buttonVariant,
+    buttonColor,
+    buttonSize,
+    buttonRipple,
+    inputVariant,
+    inputColor,
+    inputSize,
+    tableIsDense
+}) => {
+    let props = {
+        MuiButton: {},
+        MuiButtonBase: {},
+        MuiFilledInput: {},
+        MuiFormControl: {},
+        MuiFormHelperText: {},
+        MuiIconButton: {},
+        MuiInputBase: {},
+        MuiInputLabel: {},
+        MuiListItem: {},
+        MuiOutlinedInput: {},
+        MuiFab: {},
+        MuiTable: {},
+        MuiTextField: {},
+        MuiToolbar: {},
+        MuiSelect: {}
+    };
+    // ** BUTTON VARIANT
+    if (buttonVariant !== 'none') {
+        props.MuiButton.variant = buttonVariant;
+    }
+    // ** BUTTON COLOR
+    if (buttonColor !== 'none') {
+        props.MuiButton.color = buttonColor;
+        props.MuiIconButton.color = buttonColor;
+        props.MuiFab.color = buttonColor;
+    }
+    // ** BUTTON SIZE
+    if (buttonSize !== 'medium') {
+        props.MuiButton.size = buttonSize;
+        if (buttonSize !== 'large') { props.MuiIconButton.size = buttonSize; }
+        props.MuiFab.size = buttonSize;
+    }
+    // ** BUTTON RIPPLE
+    if (!buttonRipple) {
+        props.MuiButton.disableRipple = true;
+        props.MuiFab.disableRipple = true;
+        props.MuiIconButton = true;
+        props.MuiButtonBase.disableRipple = true;
+    }
+
+    // ** INPUT VARIANT
+    props.MuiInputLabel.variant = inputVariant;
+    props.MuiFormControl.variant = inputVariant;
+    props.MuiFormHelperText.variant = inputVariant;
+    props.MuiTextField.variant = inputVariant;
+    props.MuiSelect.variant = inputVariant;
+
+    // ** INPUT COLOR
+    if (inputColor !== 'none') {
+        props.MuiInputBase.color = inputColor;
+        props.MuiInputLabel.color = inputColor;
+        props.MuiFilledInput.color = inputColor;
+        props.MuiOutlinedInput.color = inputColor;
+        props.MuiFormControl.color = inputColor;
+        props.MuiTextField.color = inputColor;
+    }
+
+    // ** INPUT SIZE
+    if (inputSize !== 'normal') {
+        props.MuiInputBase.margin = 'dense';
+        props.MuiInputLabel.margin = 'dense';
+        props.MuiFilledInput.margin = 'dense';
+        props.MuiOutlinedInput.margin = 'dense';
+        props.MuiFormControl.margin = 'dense';
+        props.MuiTextField.margin = 'dense';
+    }
+
+    // ** TABLES AND LISTS DENSITY
+    if (tableIsDense) {
+        props.MuiTable = {
+            size: 'small'
+        }
+        props.MuiListItem = {
+            dense: true
+        }
+    }
+
+    // fixing Typography breaking change: https://github.com/mui-org/material-ui/issues/15607
+    props.MuiTypography = {
+        display: 'block'
+    }
+
+    let finalProps = Object.entries(props).reduce((acc, [key, value]) => {
+        if (Object.keys(value).length > 0) {
+            return {
+                ...acc,
+                [key]: value
+            }
+        }
+        return acc;
+    }, {})
+
+    return finalProps;
+}
 
 const initialState = {
     name: '',
@@ -12,15 +117,15 @@ const initialState = {
         common: { black: '#000', white: '#fff' },
         type: 'light',
         primary: {
-            light: '#7986cb',
-            main: '#3f51b5',
-            dark: '#303f9f',
+            light: '#508CD4',
+            main: '#2570CA',
+            dark: '#1D59A1',
             contrastText: '#fff'
         },
         secondary: {
-            light: '#ff4081',
-            main: '#f50057',
-            dark: '#c51162',
+            light: '#F78233',
+            main: '#F56300',
+            dark: '#C44F00',
             contrastText: '#fff'
         },
         error: {
@@ -48,7 +153,16 @@ const initialState = {
             contrastText: 'rgba(0, 0, 0, 0.87)'
         },
     },
-    props: {},
+    props: buildProps({
+        buttonVariant: 'contained',
+        buttonColor: 'primary',
+        buttonSize: 'large',
+        buttonRipple: true,
+        inputVariant: 'outlined',
+        inputColor: 'primary',
+        inputSize: 'dense',
+        tableIsDense: false
+    }),
     typography: {
         h1: {
             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -160,124 +274,19 @@ const initialState = {
         borderRadius: 4 
     },
     meta: {
-        buttonVariant: 'none',
-        buttonColor: 'none',
-        buttonSize: 'medium',
+        buttonVariant: 'contained',
+        buttonColor: 'primary',
+        buttonSize: 'large',
         buttonRipple: true,
-        inputVariant: 'standard',
-        inputColor: 'none',
-        inputSize: 'normal',
+        inputVariant: 'outlined',
+        inputColor: 'primary',
+        inputSize: 'dense',
         tableIsDense: false
     }
 }
 
 
 
-const buildProps = ({
-    buttonVariant,
-    buttonColor,
-    buttonSize,
-    buttonRipple,
-    inputVariant,
-    inputColor,
-    inputSize,
-    tableIsDense
-}) => {
-    let props = {
-        MuiButton: {},
-        MuiButtonBase: {},
-        MuiFilledInput: {},
-        MuiFormControl: {},
-        MuiFormHelperText: {},
-        MuiIconButton: {},
-        MuiInputBase: {},
-        MuiInputLabel: {},
-        MuiListItem: {},
-        MuiOutlinedInput: {},
-        MuiFab: {},
-        MuiTable: {},
-        MuiTextField: {},
-        MuiToolbar: {},
-        MuiSelect: {}
-    };
-    // ** BUTTON VARIANT
-    if (buttonVariant !== 'none') {
-        props.MuiButton.variant = buttonVariant;
-    }
-    // ** BUTTON COLOR
-    if (buttonColor !== 'none') {
-        props.MuiButton.color = buttonColor;
-        props.MuiIconButton.color = buttonColor;
-        props.MuiFab.color = buttonColor;
-    }
-    // ** BUTTON SIZE
-    if (buttonSize !== 'medium') {
-        props.MuiButton.size = buttonSize;
-        if (buttonSize !== 'large') { props.MuiIconButton.size = buttonSize; }
-        props.MuiFab.size = buttonSize;
-    }
-    // ** BUTTON RIPPLE
-    if (!buttonRipple) {
-        props.MuiButton.disableRipple = true;
-        props.MuiFab.disableRipple = true;
-        props.MuiIconButton = true;
-        props.MuiButtonBase.disableRipple = true;
-    }
-
-    // ** INPUT VARIANT
-    props.MuiInputLabel.variant = inputVariant;
-    props.MuiFormControl.variant = inputVariant;
-    props.MuiFormHelperText.variant = inputVariant;
-    props.MuiTextField.variant = inputVariant;
-    props.MuiSelect.variant = inputVariant;
-    
-    // ** INPUT COLOR
-    if (inputColor !== 'none') {
-        props.MuiInputBase.color = inputColor;
-        props.MuiInputLabel.color = inputColor;
-        props.MuiFilledInput.color = inputColor;
-        props.MuiOutlinedInput.color = inputColor;
-        props.MuiFormControl.color = inputColor;
-        props.MuiTextField.color = inputColor;
-    }
-
-    // ** INPUT SIZE
-    if (inputSize !== 'normal') {
-        props.MuiInputBase.margin = 'dense';
-        props.MuiInputLabel.margin = 'dense';
-        props.MuiFilledInput.margin = 'dense';
-        props.MuiOutlinedInput.margin = 'dense';
-        props.MuiFormControl.margin = 'dense';
-        props.MuiTextField.margin = 'dense';       
-    }
-
-    // ** TABLES AND LISTS DENSITY
-    if (tableIsDense) {
-        props.MuiTable = {
-            size: 'small'
-        }
-        props.MuiListItem = {
-            dense: true
-        }
-    }
-
-    // fixing Typography breaking change: https://github.com/mui-org/material-ui/issues/15607
-    props.MuiTypography = {
-        display: 'block'
-    }
-
-    let finalProps = Object.entries(props).reduce((acc, [key, value]) => {
-        if (Object.keys(value).length > 0) {
-            return {
-                ...acc,
-                [key]: value
-            }
-        }
-        return acc;
-    }, {})
-    
-    return finalProps;
-}
 
 const buildOverrides = (meta) => {
     if (meta.buttonSize === "small") {

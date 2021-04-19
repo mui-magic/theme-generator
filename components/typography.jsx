@@ -1,30 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Typography as MuiTypography,
     Button} from '@material-ui/core';
-import reactCSS from 'reactcss';
 import FontBlock from './fontBlock';
-import { useDispatch, useSelector } from 'react-redux'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { getThemePreview } from './utils.js'
-
 
 const Typography = () => {
-    const styles = reactCSS({
-        'default': {
-            blockWrapper: {
-                display: 'flex',
-                minWidth: 400,
-                maxWidth: 600,
-            }
-        }
-    });
-    const themePreview = useSelector(getThemePreview);
-    const theme = React.useMemo(() => {
-        return createMuiTheme(themePreview);
-    }, [themePreview]);
-
-    return <ThemeProvider theme={theme}>
-        <div >
+   
+    return <div >
             <MuiTypography variant="h1" gutterBottom>Typography</MuiTypography>
             <FontBlock variant="h1">
                 
@@ -98,7 +79,6 @@ const Typography = () => {
                 
             </FontBlock>
         </div>
-    </ThemeProvider>
 }
 
 export default Typography;
