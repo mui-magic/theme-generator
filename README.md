@@ -1,1 +1,1 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+This is the theme generator for [MUI Magic](https://github.com/mui-magic/mui-magic).
