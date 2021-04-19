@@ -137,7 +137,7 @@ const Publish = () => {
                
                 { (status === 'loading') && (<>
                     <DialogContentText>
-                        Reticulating Splines
+                        Reticulating Splines...
                     </DialogContentText>
                     <LinearProgress />
                 </>)
