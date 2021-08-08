@@ -36,7 +36,7 @@ const Generator = () => {
     }, [themePreview]);
     return <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
             <div style={styles.generatorRoot}>
 
                 <div style={styles.generatorSection}>
